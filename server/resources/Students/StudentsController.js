@@ -18,7 +18,7 @@ student.save (function (err, date) {
 
 }
   /////////////////////////////////////////
-  exports.findStudent = function (req, res) {
+  exports.find = function (req, res) {
     db.StudentSchema.find({}, function (err, data){
       if (err){
         console.log("err in show all student");
@@ -29,7 +29,7 @@ student.save (function (err, date) {
 
 //////// / ///////////////////////////////////////////////
 
-exports.editStudent = function (req, res) {
+exports.edit = function (req, res) {
   var id = req.body._id;
   var editStudentlevel = req.body.studentlevel;
   db.StudentSchema.findOneAndUpdate({_id:id}, {$set: {studentLevel}},
@@ -43,7 +43,7 @@ exports.editStudent = function (req, res) {
 
 }
 //////////////////////////////////////////////////////////////////
-exports.deleteStudent = function (req,res){
+exports.delete = function (req,res){
   var id = req.body._id;
   db.studentSchema.findOneAndRemove({_id: id}, function (err,data) {
     if (err){
