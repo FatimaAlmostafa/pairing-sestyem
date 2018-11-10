@@ -1,5 +1,5 @@
 import React from 'react';
-class Home2 extends React.Component {
+class Pairing extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -7,11 +7,11 @@ class Home2 extends React.Component {
     render() {
       return (
         <div>
-          <h1> hello from home2</h1>
+          <h1> hello from Pairing</h1> 
         </div>
-      )  
+      )
     }
 
 }
 
-export default Home2;
+export default Pairing ;
