@@ -2,12 +2,12 @@ var mongoose =require('mongoose');
 
 
 var HistorySchema = mongoose.Schema({
-  table   : [{student1: String , student2: String}]
+  pairs :{type:[String]}
 });
 
 
 
 
-var History = mongoose.model('History',hisSchema);
+var History = mongoose.model('History',HistorySchema);
 
 module.exports = History;

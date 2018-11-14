@@ -27223,7 +27223,6 @@
 	        _react2.default.createElement('br', null),
 	        _react2.default.createElement('br', null),
 	        _react2.default.createElement('br', null),
-	        _react2.default.createElement('br', null),
 	        _react2.default.createElement(
 	          _reactRouterDom.NavLink,
 	          { to: '/addstudent' },
@@ -47148,6 +47147,8 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -47163,35 +47164,32 @@
 	    var _this = _possibleConstructorReturn(this, (AddStudent.__proto__ || Object.getPrototypeOf(AddStudent)).call(this, props));
 	
 	    _this.state = {
-	      students: [],
-	      name: '',
+	      studentname: '',
 	      level: '',
-	      id: ''
+	      allStudents: [],
+	      newlevel: 0
 	    };
 	    _this.addstudent = _this.addstudent.bind(_this);
-	    _this.fetchData = _this.fetchData.bind(_this);
+	    _this.handleChange = _this.handleChange.bind(_this);
+	    _this.edit = _this.edit.bind(_this);
 	    return _this;
 	  }
 	
 	  _createClass(AddStudent, [{
 	    key: 'handleChange',
 	    value: function handleChange(e) {
-	      this.setState({
-	        name: e.target.value,
-	        level: e.target.value
-	      });
+	      this.setState(_defineProperty({}, e.target.name, e.target.value));
 	    }
 	  }, {
 	    key: 'addstudent',
 	    value: function addstudent() {
 	      var that = this;
-	      console.log("addstudent");
-	
+	      console.log("addstudent", this.state);
 	      _jquery2.default.ajax({
 	        type: 'POST',
-	        url: '/addstudent',
+	        url: '/students/create',
 	        data: {
-	          name: that.state.name,
+	          studentname: that.state.studentname,
 	          level: that.state.level
 	        },
 	        success: function success(data) {
@@ -47203,35 +47201,87 @@
 	      });
 	    }
 	  }, {
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      this.fetchData();
-	    }
-	  }, {
-	    key: 'fetchData',
-	    value: function fetchData() {
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
 	      var that = this;
 	      _jquery2.default.ajax({
 	        type: 'GET',
-	        url: '/students',
+	        url: '/students/find',
 	        success: function success(data) {
 	          that.setState({
-	            students: data
+	            allStudents: data
 	          });
+	        },
+	        error: function error(err) {
+	          console.log('failed to add student');
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'edit',
+	    value: function edit(e) {
+	      console.log(e.target.value);
+	      var that = this;
+	      console.log("addstudent", this.state);
+	      _jquery2.default.ajax({
+	        type: 'PUT',
+	        url: '/students/edit',
+	        data: {
+	          id: e.target.value,
+	          level: that.state.newlevel
+	        },
+	        success: function success(data) {
+	          alert("student edited");
+	        },
+	        error: function error(err) {
+	          console.log('failed to edit student');
 	        }
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      console.log('state', this.state);
+	      var that = this;
 	      return _react2.default.createElement(
 	        'div',
 	        null,
+	        _react2.default.createElement('input', { type: 'text',
+	          name: 'studentname',
+	          placeholder: 'student name',
+	          onChange: this.handleChange
+	        }),
+	        _react2.default.createElement('input', { type: 'number',
+	          name: 'level',
+	          placeholder: 'level',
+	          max: '5',
+	          min: '0',
+	          onChange: this.handleChange
+	        }),
 	        _react2.default.createElement(
-	          'h1',
-	          null,
-	          'gfjgkhjkl'
-	        )
+	          'button',
+	          { onClick: this.addstudent },
+	          'send'
+	        ),
+	        _react2.default.createElement('hr', null),
+	        _react2.default.createElement('br', null),
+	        this.state.allStudents.map(function (student, i) {
+	          return _react2.default.createElement(
+	            'h3',
+	            { key: i },
+	            student.studentname,
+	            '    ',
+	            student.level,
+	            '  ',
+	            _react2.default.createElement('input', { name: 'newlevel', type: 'number', min: '0', max: '5', onChange: that.handleChange }),
+	            _react2.default.createElement(
+	              'button',
+	              { value: student._id, onClick: that.edit },
+	              'edit'
+	            ),
+	            ' '
+	          );
+	        })
 	      );
 	    }
 	  }]);
@@ -57633,6 +57683,10 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _jquery = __webpack_require__(/*! jquery */ 334);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -57647,19 +57701,121 @@
 	  function Pairing(props) {
 	    _classCallCheck(this, Pairing);
 	
-	    return _possibleConstructorReturn(this, (Pairing.__proto__ || Object.getPrototypeOf(Pairing)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Pairing.__proto__ || Object.getPrototypeOf(Pairing)).call(this, props));
+	
+	    _this.state = {
+	      allStudents: [],
+	      pairs: [],
+	      show: false,
+	      pairsToSend: []
+	    };
+	    _this.pair = _this.pair.bind(_this);
+	    _this.save = _this.save.bind(_this);
+	
+	    return _this;
 	  }
 	
 	  _createClass(Pairing, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var that = this;
+	      _jquery2.default.ajax({
+	        type: 'GET',
+	        url: '/students/find',
+	        success: function success(data) {
+	          that.setState({
+	            allStudents: data
+	          });
+	        },
+	        error: function error(err) {
+	          console.log('failed to add student');
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'save',
+	    value: function save() {
+	      console.log('this.state.pairs ', this.state.pairsToSend);
+	      var that = this;
+	      _jquery2.default.ajax({
+	        type: 'POST',
+	        url: '/history/create',
+	        data: { pairsToSend: that.state.pairsToSend },
+	        success: function success(data) {
+	          alert("history added");
+	        },
+	        error: function error(err) {
+	          console.log('failed to add history');
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'pair',
+	    value: function pair() {
+	      console.log('pair');
+	      var l = this.state.allStudents.length;
+	      var arr = [];
+	      var i = 0;
+	      while (i !== l) {
+	        var n = Math.floor(Math.random() * l) + 0;
+	        if (!arr.includes(n)) {
+	          arr.push(n);
+	          i++;
+	        }
+	      }
+	      console.log('aaa ', arr);
+	      var pairs = [];
+	      var pairsToSend = [];
+	      for (var i = 0; i < arr.length; i++) {
+	        pairsToSend.push(this.state.allStudents[arr[i]].studentname);
+	      }
+	      for (var i = 0; i < arr.length; i = i + 2) {
+	
+	        if (i === arr.length - 1) {
+	          pairs.push({ f: this.state.allStudents[arr[i]].studentname, s: '-----' });
+	        } else {
+	          pairs.push({ f: this.state.allStudents[arr[i]].studentname, s: this.state.allStudents[arr[i + 1]].studentname });
+	        }
+	      }
+	
+	      console.log(pairs);
+	      this.setState({
+	        pairs: pairs,
+	        show: true,
+	        pairsToSend: pairsToSend
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      console.log(this.state);
 	      return _react2.default.createElement(
 	        'div',
 	        null,
 	        _react2.default.createElement(
-	          'h1',
+	          'button',
+	          { onClick: this.pair },
+	          'Pair'
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { onClick: this.save },
+	          'save'
+	        ),
+	        _react2.default.createElement('hr', null),
+	        this.state.show && _react2.default.createElement(
+	          'div',
 	          null,
-	          ' hello from Pairing'
+	          this.state.pairs.map(function (pair, i) {
+	            return _react2.default.createElement(
+	              'h3',
+	              { key: i },
+	              ' ',
+	              pair.f,
+	              ' ++++++  ',
+	              pair.s
+	            );
+	          })
 	        )
 	      );
 	    }
@@ -57689,6 +57845,10 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _jquery = __webpack_require__(/*! jquery */ 334);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -57697,18 +57857,41 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var Pairing = function (_React$Component) {
-	  _inherits(Pairing, _React$Component);
+	var History = function (_React$Component) {
+	  _inherits(History, _React$Component);
 	
-	  function Pairing(props) {
-	    _classCallCheck(this, Pairing);
+	  function History(props) {
+	    _classCallCheck(this, History);
 	
-	    return _possibleConstructorReturn(this, (Pairing.__proto__ || Object.getPrototypeOf(Pairing)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (History.__proto__ || Object.getPrototypeOf(History)).call(this, props));
+	
+	    _this.state = {
+	      history: []
+	    };
+	    return _this;
 	  }
 	
-	  _createClass(Pairing, [{
+	  _createClass(History, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var that = this;
+	      _jquery2.default.ajax({
+	        type: 'GET',
+	        url: '/history/retrive',
+	        success: function success(data) {
+	          that.setState({
+	            history: data
+	          });
+	        },
+	        error: function error(err) {
+	          console.log('failed to add student');
+	        }
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      console.log(this.state);
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -57721,10 +57904,10 @@
 	    }
 	  }]);
 	
-	  return Pairing;
+	  return History;
 	}(_react2.default.Component);
 	
-	exports.default = Pairing;
+	exports.default = History;
 
 /***/ })
 /******/ ]);

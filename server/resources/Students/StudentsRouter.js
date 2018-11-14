@@ -8,21 +8,21 @@ studentsRouter.route('/create')
 
   studentsRouter.route('/find')
     .get(function (req, res) {
-      studentsController.create(req, res);
+      studentsController.find(req, res);
     });
 
 
-    studentsRouter.route('/edit')
-      .post(function (req, res) {
-        studentsController.create(req, res);
-      })
+  studentsRouter.route('/edit')
+    .put(function (req, res) {
+      studentsController.edit(req, res);
+    })
 
 
 
-      studentsRouter.route('/delete')
-        .post(function (req, res) {
-          studentsController.create(req, res);
-        })
+  // studentsRouter.route('/delete')
+  //   .post(function (req, res) {
+  //     studentsController.create(req, res);
+  //   })
 
 
 

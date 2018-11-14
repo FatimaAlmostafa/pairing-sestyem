@@ -15,7 +15,7 @@ class Home extends React.Component {
         <br/>
           <br/>
           <br/>
-            <br/>
+
             <NavLink to = "/addstudent">
                         <button>Add Student</button>
                         </NavLink>
