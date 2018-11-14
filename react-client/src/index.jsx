@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {browserHistory, Route, BrowserRouter as Router} from 'react-router-dom';
 import Home from './components/Home.jsx';
-import Home2 from './components/Home2.jsx';
+import AddStudent from './components/AddStudent.jsx';
 import Pairing from './components/Pairing.jsx';
 import History from './components/History.jsx';
 
@@ -17,7 +17,7 @@ class App extends React.Component {
       <Router history={browserHistory}>
       <div className="container-fluid">
       <Route exact path="/" component={Home}/>
-      <Route path='/addstudent' component={Home2} />
+      <Route path='/addstudent' component={AddStudent} />
       <Route path='/paring' component={Pairing} />
       <Route path='/history' component={History} />
       </div>
