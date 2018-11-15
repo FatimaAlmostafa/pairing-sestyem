@@ -47172,6 +47172,7 @@
 	    _this.addstudent = _this.addstudent.bind(_this);
 	    _this.handleChange = _this.handleChange.bind(_this);
 	    _this.edit = _this.edit.bind(_this);
+	    _this.delete = _this.delete.bind(_this);
 	    return _this;
 	  }
 	
@@ -47239,6 +47240,19 @@
 	      });
 	    }
 	  }, {
+	    key: 'delete',
+	    value: function _delete(id) {
+	      var that = this;
+	
+	      _jquery2.default.ajax({
+	        type: 'delete',
+	        url: '/students/' + id,
+	        success: function success(data) {
+	          alert('Delete Student');
+	        }
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      console.log('state', this.state);
@@ -47278,6 +47292,12 @@
 	              'button',
 	              { value: student._id, onClick: that.edit },
 	              'edit'
+	            ),
+	            ' ',
+	            _react2.default.createElement(
+	              'button',
+	              { value: student._id, onClick: that.delete },
+	              'Delete'
 	            ),
 	            ' '
 	          );

@@ -13,6 +13,7 @@ class AddStudent extends React.Component {
     this.addstudent = this.addstudent.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.edit = this.edit.bind(this);
+    this.delete = this.delete.bind(this);
    }
   handleChange(e) {
     this.setState({
@@ -75,6 +76,18 @@ class AddStudent extends React.Component {
   });
   }
 
+  delete(id){
+    var that=this
+
+  $.ajax({
+  type:'delete',
+    url: '/students/'+id,
+    success:function(data){
+      alert('Delete Student')
+    }
+  });
+  }
+
     render() {
       console.log('state',this.state)
       var that = this;
@@ -100,7 +113,7 @@ class AddStudent extends React.Component {
 
         this.state.allStudents.map(function(student,i){
           return(
-            <h3 key={i}>{student.studentname}    {student.level}  <input name='newlevel' type='number' min='0' max='5' onChange={that.handleChange} /><button value={student._id} onClick={that.edit} >edit</button> </h3>
+            <h3 key={i}>{student.studentname}    {student.level}  <input name='newlevel' type='number' min='0' max='5' onChange={that.handleChange} /><button value={student._id} onClick={that.edit} >edit</button> <button value={student._id} onClick={that.delete} >Delete</button> </h3>
           )
         })
 

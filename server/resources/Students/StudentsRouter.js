@@ -20,7 +20,7 @@ studentsRouter.route('/create')
 
 
   // studentsRouter.route('/delete')
-  //   .post(function (req, res) {
+  //   .delete(function (req, res) {
   //     studentsController.create(req, res);
   //   })
 
